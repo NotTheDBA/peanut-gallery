@@ -14,12 +14,10 @@ module.exports = function(app) {
 
             // Now, we grab every h2 within an article tag, and do the following:
             $("div .story-body").each(function(i, element) {
-                // Save an empty result object
-                // console.log(this)
-                // console.log($(this).children("a"));
+
                 var result = {};
 
-                // // // Add the text and href of every link, and save them as properties of the result object
+                // Add the article details
                 result.title = $(this)
                     .children("div .story-headline")
                     .children("h3")
@@ -31,17 +29,24 @@ module.exports = function(app) {
                     .children("h3")
                     .children("a")
                     .attr("href");
-                console.log(result)
-                    // // Create a new Article using the `result` object built from scraping
-                    // db.Article.create(result)
-                    //     .then(function(dbArticle) {
-                    //         // View the added result in the console
-                    //         console.log(dbArticle);
-                    //     })
-                    //     .catch(function(err) {
-                    //         // If an error occurred, send it to the client
-                    //         return res.json(err);
-                    //     });
+
+
+                result.summary = $(this)
+                    .children("div .story-description")
+                    .children("p")
+                    .text();
+
+                // console.log(result)
+                // Create a new Article using the `result` object built from scraping
+                db.Article.create(result)
+                    .then(function(dbArticle) {
+                        // View the added result in the console
+                        console.log(dbArticle);
+                    })
+                    .catch(function(err) {
+                        // If an error occurred, send it to the client
+                        return res.json(err);
+                    });
             });
 
             // If we were able to successfully scrape and save an Article, send a message to the client
@@ -81,7 +86,8 @@ module.exports = function(app) {
 
     // Route for saving/updating an Article's associated Note
     app.post("/articles/:id", function(req, res) {
-        // Create a new note and pass the req.body to the entry
+        console.log(req.body)
+            // Create a new note and pass the req.body to the entry
         db.Note.create(req.body)
             .then(function(dbNote) {
                 // If a Note was created successfully, find one Article with an `_id` equal to `req.params.id`. Update the Article to be associated with the new Note

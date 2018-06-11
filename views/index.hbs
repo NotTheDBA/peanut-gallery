@@ -1,11 +1,18 @@
-Hello {{#each articles}}
-<div>
-    <div>
-        {{article}}
-        <div> {{#each comments}}
+<div id="wrapper">
+    <h1>Washington Post</h1>
+    <h2>
+        <i>Following the news of the day
+            <br/> on one of the nation's most popular news sites.</i>
+    </h2>
+    <div id="articles">{{#each articles}}
+        <div>
+            {{article}}
+
         </div>
-        {{comment}}
-    </div>
-    {{/each}}
+        {{/each}}</div>
+    <div id="notes"> {{#each notes}}
+        <div>
+            {{note}}
+        </div>
+        {{/each}}</div>
 </div>
-{{/each}}
