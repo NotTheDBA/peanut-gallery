@@ -1,3 +1,5 @@
+// TODO:  re-write the content fillers to use handlebars
+
 // Grab the articles as a json
 $.getJSON("/articles", function(data) {
     // For each one
@@ -46,7 +48,7 @@ $(document).on("click", "p", function() {
 $(document).on("click", "#savenote", function() {
     // Grab the id associated with the article from the submit button
     var thisId = $(this).attr("data-id");
-
+    //TODO: Figure out why this isn't posting the note.
     console.log(thisId);
     // Run a POST request to change the note, using what's entered in the inputs
     $.ajax({
