@@ -1,3 +1,16 @@
+# Instructions
+.instructions
+
+# Environment configurations
+.DS_Store
+.vscode
+.code-workspace
+node_modules/
+
+# Secrets
+config/connection.js
+.env
+
 # Logs
 logs
 *.log
