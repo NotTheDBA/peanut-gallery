@@ -14,15 +14,16 @@ const app = express();
 const PORT = process.env.PORT || 8080;
 app.use(express.static("public"));
 
+// BodyParser
+// ================
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
+
 // Folders
 // ================
 const con = require("./controllers");
 const route = require("./routes")(app);
 
-// BodyParser
-// ================
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(bodyParser.json());
 
 // Handlebars
 // ================
