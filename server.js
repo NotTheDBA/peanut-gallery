@@ -1,16 +1,12 @@
-// *********************************************************************************
+// ************************************************************************
 // App:  Peanut Gallery
-// *********************************************************************************
+// ************************************************************************
 
 // Dependencies
 // ================
 const express = require("express");
 const bodyParser = require("body-parser");
 const exphbs = require("express-handlebars");
-const mongoose = require("mongoose");
-const axios = require("axios");
-const cheerio = require("cheerio");
-
 
 // Express
 // ================
@@ -18,11 +14,15 @@ const app = express();
 const PORT = process.env.PORT || 8080;
 app.use(express.static("public"));
 
+// Folders
+// ================
+const con = require("./controllers");
+const route = require("./routes")(app);
+
 // BodyParser
 // ================
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
-
 
 // Handlebars
 // ================
@@ -32,12 +32,6 @@ app.engine('hbs', exphbs({
     defaultLayout: "main"
 }));
 app.set('view engine', '.hbs');
-
-// Folders
-// ================
-const db = require("./models");
-const con = require("./controllers");
-const route = require("./routes")(app);
 
 // Start the server
 // ================

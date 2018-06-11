@@ -1,6 +1,8 @@
-// Exporting an object containing all of our models
+// Connect to the Mongo DB
+const mongoose = require("mongoose");
+mongoose.connect("mongodb://localhost/peanutgallery");
 
 module.exports = {
-  Article: require("./Article"),
-  Note: require("./Note")
+    Article: require("./Article"),
+    Note: require("./Note")
 };
