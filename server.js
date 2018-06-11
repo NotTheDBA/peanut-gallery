@@ -4,23 +4,25 @@
 
 // Dependencies
 // ================
-var express = require("express");
-var bodyParser = require("body-parser");
-var exphbs = require("express-handlebars");
+const express = require("express");
+const bodyParser = require("body-parser");
+const exphbs = require("express-handlebars");
+const mongoose = require("mongoose");
+const axios = require("axios");
+const cheerio = require("cheerio");
+
 
 // Express
 // ================
-var app = express();
-var PORT = process.env.PORT || 8080;
+const app = express();
+const PORT = process.env.PORT || 8080;
+app.use(express.static("public"));
 
 // BodyParser
 // ================
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-// Static directory
-// ================
-app.use(express.static("public"));
 
 // Handlebars
 // ================
@@ -31,12 +33,11 @@ app.engine('hbs', exphbs({
 }));
 app.set('view engine', '.hbs');
 
-
-// Routes
+// Folders
 // ================
-require('./routes/html-routes.js')(app);
-require('./routes/api-routes.js')(app);
-
+const db = require("./models");
+const con = require("./controllers");
+const route = require("./routes")(app);
 
 // Start the server
 // ================
