@@ -24,7 +24,6 @@ app.use(bodyParser.json());
 const con = require("./controllers");
 const route = require("./routes")(app);
 
-
 // Handlebars
 // ================
 app.set('views', './views')
