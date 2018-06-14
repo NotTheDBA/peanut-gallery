@@ -1,6 +1,9 @@
-<div> Article {{_id}} {{title}} {{link}} {{#each note}}
-    <div>
-        {{name}} {{body}}
-    </div>
-    {{/each}}
+<div> Article {{!-- Display the apropos information on the page --}}
+    <p data-id={{_id}}>{{title}}
+        <br />{{link}}
+        <a href={{link}} target="_blank"></a>
+        <form>
+            <input type="submit" value="View" formaction={{link}} formtarget="_blank">
+        </form>
+    </p>
 </div>
