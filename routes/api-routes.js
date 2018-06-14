@@ -4,6 +4,13 @@ module.exports = function (app) {
     const cheerio = require("cheerio");
     const db = require("../models");
 
+
+    app.get('/', function (req, res) {
+        // res.render('index');
+        res.redirect('articles');
+    });
+
+
     // A GET route for scraping the echoJS website
     app.get("/scrape", function (req, res) {
         // First, we grab the body of the html with request
@@ -54,21 +61,34 @@ module.exports = function (app) {
         });
     });
 
-    // // Route for getting all Articles from the db
-    // app.get("/articles", function (req, res) {
-    //     // app.get("/", function(req, res) {
-    //     // Grab every document in the Articles collection
-    //     db.Article.find({})
-    //         .then(function (dbArticle) {
-    //             // If we were able to successfully find Articles, send them back to the client
-    //             res.json(dbArticle);
-    //             // res.render("index");
-    //         })
-    //         .catch(function (err) {
-    //             // If an error occurred, send it to the client
-    //             res.json(err);
-    //         });
-    // });
+    app.get('/articles', function (req, res) {
+
+        const db = require("../models");
+        db.Article.find()
+            // ..and populate all of the notes associated with it
+            .populate("note")
+            .then(function (dbArticle) {
+                // If we were able to successfully find an Article with the given id, send it back to the client
+                // res.json(dbArticle);
+
+                // console.log(dbArticle.title);
+
+                var hbsObject = {
+                    articles: dbArticle,
+                    layout: "new"
+                };
+                res.render('newidx', hbsObject);
+
+            })
+            .catch(function (err) {
+                // If an error occurred, send it to the client
+                // res.json(err);
+
+                console.log(err);
+            });
+
+
+    });
 
     // Route for grabbing a specific Article by id, populate it with it's note
     app.get("/articles/:id", function (req, res) {
