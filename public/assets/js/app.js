@@ -3,10 +3,13 @@
 // Whenever someone clicks a p tag
 $(document).on("click", "p", function () {
     // Empty the notes from the note section
-    $("#notes").empty();
-    // Save the id from the p tag
-    var thisId = $(this).attr("data-id");
 
+    showNotes($(this).attr("data-id"));
+});
+
+function showNotes(thisId) {
+
+    $("#notes").empty();
     // Now make an ajax call for the Article
     $.ajax({
         method: "GET",
@@ -14,7 +17,6 @@ $(document).on("click", "p", function () {
     })
         // With that done, add the note information to the page
         .then(function (data) {
-            console.log(data);
             // The title of the article
             $("#notes").append("<h2>" + data.title + "</h2>");
 
@@ -27,22 +29,30 @@ $(document).on("click", "p", function () {
 
             // If there's a note in the article
             if (data.note) {
-                console.log(data.note)
+                // console.log(data.note)
                 data.note.forEach(element => {
 
                     $("#notes").append("<p id='" + element._id + "'>");
+
                     // Place the name of the note in the name input
-                    $("#notes").append(element.name);
-                    $("#notes").append("<br />");
+                    $("#" + element._id).append(element.name);
+                    $("#" + element._id).append("<br />");
                     // Place the body of the note in the body textarea
-                    $("#notes").append(element.body);
-                    $("#notes").append("<br />");
-                    $("#notes").append("<button data-id='" + element._id + "' class='dropnote'>Remove Note</button>");
-                    $("#notes").append("</p>");
+                    $("#" + element._id).append(element.body);
+                    $("#" + element._id).append("<br />");
+                    $("#" + element._id).append("<button data-id='" + element._id + "' article-id='" + data._id + "'  class='dropnote'>Remove Note</button>");
+                    // // Place the name of the note in the name input
+                    // $("#notes").append(element.name);
+                    // $("#notes").append("<br />");
+                    // // Place the body of the note in the body textarea
+                    // $("#notes").append(element.body);
+                    // $("#notes").append("<br />");
+                    // $("#notes").append("<button data-id='" + element._id + "' class='dropnote'>Remove Note</button>");
+                    // $("#notes").append("</p>");
                 });
             }
         });
-});
+}
 
 // When you click the savenote button
 $(document).on("click", "#savenote", function () {
@@ -63,20 +73,21 @@ $(document).on("click", "#savenote", function () {
         // With that done
         .then(function (data) {
             // Empty the notes section
-            $("#notes").empty();
+            showNotes(thisId);
+
         });
 
-    // Also, remove the values entered in the input and textarea for note entry
-    $("#nameinput").val("");
-    $("#bodyinput").val("");
+    // // Also, remove the values entered in the input and textarea for note entry
+    // $("#nameinput").val("");
+    // $("#bodyinput").val("");
 });
 
 
-// When you click the savenote button
+// When you click the Remove Note button
 $(document).on("click", ".dropnote", function () {
-
     // Grab the id associated with the article from the submit button
     var thisId = $(this).attr("data-id");
+    var articleId = $(this).attr("article-id");
     // Run a POST request to change the note, using what's entered in the inputs
     $.ajax({
         method: "DELETE",
@@ -84,8 +95,8 @@ $(document).on("click", ".dropnote", function () {
     })
         // With that done
         .then(function (data) {
-            // Empty the notes section
-            $("#" + thisId).val("")
+            //TODO: This call generates an extra blank notes box.
+            showNotes(articleId);
         });
 
 });

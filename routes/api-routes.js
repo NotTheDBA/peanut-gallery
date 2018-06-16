@@ -6,13 +6,13 @@ module.exports = function (app) {
 
 
     app.get('/', function (req, res) {
-        // res.render('index');
-        res.redirect('articles');
+
+        res.redirect('scrape');
     });
 
 
-    // A GET route for scraping the echoJS website
     app.get("/scrape", function (req, res) {
+        console.log("scraping")
         // First, we grab the body of the html with request
         axios.get("https://www.washingtonpost.com/national/?nid=top_nav_national").then(function (response) {
             // console.log(response);
@@ -22,42 +22,50 @@ module.exports = function (app) {
             // Now, we grab every h2 within an article tag, and do the following:
             $("div .story-body").each(function (i, element) {
 
-                var result = {};
+                var story = {};
 
                 // Add the article details
-                result.title = $(this)
+                story.title = $(this)
                     .children("div .story-headline")
                     .children("h3")
                     .children("a")
                     .text();
 
-                result.link = $(this)
+                story.link = $(this)
                     .children("div .story-headline")
                     .children("h3")
                     .children("a")
                     .attr("href");
 
 
-                result.summary = $(this)
+                story.summary = $(this)
                     .children("div .story-description")
                     .children("p")
                     .text();
 
-                // console.log(result)
-                // Create a new Article using the `result` object built from scraping
-                db.Article.create(result)
+
+                // See if this story already exists...
+                db.Article.findOne({ title: story.title })
                     .then(function (dbArticle) {
-                        // View the added result in the console
-                        console.log(dbArticle);
+
+                        if (dbArticle == null) {
+                            // Create a new Article using the `story` object built from scraping
+                            db.Article.create(story)
+                                .then(function (dbArticle) {
+                                    // View the added story in the console
+                                    // console.log(dbArticle);
+                                })
+                                .catch(function (err) {
+                                    // If an error occurred, send it to the client
+                                    return res.json(err);
+                                });
+                        }
                     })
-                    .catch(function (err) {
-                        // If an error occurred, send it to the client
-                        return res.json(err);
-                    });
+
             });
 
             // If we were able to successfully scrape and save an Article, send a message to the client
-            res.send("Scrape Complete");
+            res.redirect('articles');
         });
     });
 
@@ -68,10 +76,6 @@ module.exports = function (app) {
             // ..and populate all of the notes associated with it
             .populate("note")
             .then(function (dbArticle) {
-                // If we were able to successfully find an Article with the given id, send it back to the client
-                // res.json(dbArticle);
-
-                // console.log(dbArticle.title);
 
                 var hbsObject = {
                     articles: dbArticle,
