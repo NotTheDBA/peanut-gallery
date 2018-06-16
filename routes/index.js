@@ -1,7 +1,5 @@
 // Exporting an object containing all of our routes
-const Routes = function(app) {
-
-    const HTML = require("./html-routes.js")(app);
+const Routes = function (app) {
 
     const API = require("./api-routes.js")(app);
 

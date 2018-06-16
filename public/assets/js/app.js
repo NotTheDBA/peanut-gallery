@@ -30,12 +30,14 @@ $(document).on("click", "p", function () {
                 console.log(data.note)
                 data.note.forEach(element => {
 
-                    $("#notes").append("<p>");
+                    $("#notes").append("<p id='" + element._id + "'>");
                     // Place the name of the note in the name input
                     $("#notes").append(element.name);
                     $("#notes").append("<br />");
                     // Place the body of the note in the body textarea
                     $("#notes").append(element.body);
+                    $("#notes").append("<br />");
+                    $("#notes").append("<button data-id='" + element._id + "' class='dropnote'>Remove Note</button>");
                     $("#notes").append("</p>");
                 });
             }
@@ -60,8 +62,6 @@ $(document).on("click", "#savenote", function () {
     })
         // With that done
         .then(function (data) {
-            // // Log the response
-            // // console.log(data);
             // Empty the notes section
             $("#notes").empty();
         });
@@ -69,4 +69,23 @@ $(document).on("click", "#savenote", function () {
     // Also, remove the values entered in the input and textarea for note entry
     $("#nameinput").val("");
     $("#bodyinput").val("");
+});
+
+
+// When you click the savenote button
+$(document).on("click", ".dropnote", function () {
+
+    // Grab the id associated with the article from the submit button
+    var thisId = $(this).attr("data-id");
+    // Run a POST request to change the note, using what's entered in the inputs
+    $.ajax({
+        method: "DELETE",
+        url: "/notes/" + thisId
+    })
+        // With that done
+        .then(function (data) {
+            // Empty the notes section
+            $("#" + thisId).val("")
+        });
+
 });

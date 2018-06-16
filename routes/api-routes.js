@@ -130,4 +130,18 @@ module.exports = function (app) {
     });
 
 
+    // Route for saving/updating an Article's associated Note
+    app.delete("/notes/:id", function (req, res) {
+
+        db.Note.findOneAndRemove({ _id: req.params.id })
+            .then(function (dbArticle) {
+                // If we were able to successfully update an Article, send it back to the client
+                res.json(dbArticle);
+            })
+            .catch(function (err) {
+                // If an error occurred, send it to the client
+                res.json(err);
+            });
+    });
+
 }
