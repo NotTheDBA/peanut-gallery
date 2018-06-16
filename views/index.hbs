@@ -1,9 +1,16 @@
 <div id="wrapper">
-    <h1>Washington Post</h1>
-    <h2>
-        <i>Following the news of the day
-            <br/> on one of the nation's most popular news sites.</i>
-    </h2>
+    <div id="header">
+        <h1>Washington Post</h1>
+        <h2>Peanut Gallery</h2>
+        <h3>
+            <i>Following the news of the day on one of the nation's most popular news sites.</i>
+        </h3>
+    </div>
+
+    <div>
+        <a href="/" class="button" name="Refresh">Refresh</a>
+    </div>
+
     <div id="articles">
         {{#each articles}} {{> article-block }} {{/each}}
 

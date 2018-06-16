@@ -19,15 +19,31 @@
             padding-top: 5%;
         }
 
+        #header,
         #articles {
             display: inline-block;
             overflow: auto;
             width: 55%;
+        }
+
+        #articles {
             height: 700px;
         }
 
         .article-view:focus-within {
             background-color: rgb(163, 201, 216)
+        }
+
+        .button {
+            display: block;
+            width: 80px;
+            height: 20px;
+            background: #4E9CAF;
+            padding: 5px;
+            text-align: center;
+            border-radius: 5px;
+            color: white;
+            font-weight: bold;
         }
 
         #notes {
@@ -56,7 +72,6 @@
 </head>
 
 <body>
-    <title>Peanut Gallery</title>
     {{{ body }}}
 </body>
 
