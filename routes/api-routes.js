@@ -73,6 +73,7 @@ module.exports = function (app) {
 
         const db = require("../models");
         db.Article.find()
+            .sort({ seen: -1 })
             // ..and populate all of the notes associated with it
             .populate("note")
             .then(function (dbArticle) {
