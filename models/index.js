@@ -11,6 +11,6 @@ mongoose.Promise = Promise;
 mongoose.connect(MONGODB_URI);
 
 module.exports = {
-    Article: require("./Article"),
-    Note: require("./Note")
+    Note: require("./Note"),
+    Article: require("./Article")
 };
