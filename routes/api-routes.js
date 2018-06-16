@@ -6,7 +6,7 @@ module.exports = function (app) {
 
 
     app.get('/', function (req, res) {
-
+        //Refresh articles on load
         res.redirect('scrape');
     });
 
@@ -80,9 +80,9 @@ module.exports = function (app) {
 
                 var hbsObject = {
                     articles: dbArticle,
-                    layout: "new"
+                    layout: "main"
                 };
-                res.render('newidx', hbsObject);
+                res.render('index', hbsObject);
 
             })
             .catch(function (err) {

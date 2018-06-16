@@ -1,7 +1,7 @@
 // TODO:  re-write the content fillers to use handlebars
 
 // Whenever someone clicks a p tag
-$(document).on("click", "p", function () {
+$(document).on("click", ".article-view", function () {
     // Empty the notes from the note section
 
     showNotes($(this).attr("data-id"));
@@ -58,24 +58,27 @@ function showNotes(thisId) {
 $(document).on("click", "#savenote", function () {
     // Grab the id associated with the article from the submit button
     var thisId = $(this).attr("data-id");
+    $.when(
+        // Run a POST request to change the note, using what's entered in the inputs
+        $.ajax({
+            method: "POST",
+            url: "/articles/" + thisId,
+            data: {
+                // Value taken from name input
+                name: $("#nameinput").val(),
+                // Value taken from note textarea
+                body: $("#bodyinput").val()
+            }
+        })
+            // With that done
+            .then(function (data) {
+                // Empty the notes section
 
-    // Run a POST request to change the note, using what's entered in the inputs
-    $.ajax({
-        method: "POST",
-        url: "/articles/" + thisId,
-        data: {
-            // Value taken from name input
-            name: $("#nameinput").val(),
-            // Value taken from note textarea
-            body: $("#bodyinput").val()
-        }
-    })
-        // With that done
-        .then(function (data) {
-            // Empty the notes section
-            showNotes(thisId);
+            })
 
-        });
+    ).then(showNotes(thisId));
+
+
 
     // // Also, remove the values entered in the input and textarea for note entry
     // $("#nameinput").val("");
@@ -88,6 +91,8 @@ $(document).on("click", ".dropnote", function () {
     // Grab the id associated with the article from the submit button
     var thisId = $(this).attr("data-id");
     var articleId = $(this).attr("article-id");
+
+    // $("#notes").empty();
     // Run a POST request to change the note, using what's entered in the inputs
     $.ajax({
         method: "DELETE",
