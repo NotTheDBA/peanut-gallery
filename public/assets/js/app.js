@@ -1,4 +1,4 @@
-// TODO:  re-write the content fillers to use handlebars
+// TODO: Can we re-write the note fillers to use handlebars?
 
 // Whenever someone clicks a p tag
 $(document).on("click", ".article-view", function () {
@@ -33,22 +33,12 @@ function showNotes(thisId) {
                 data.note.forEach(element => {
 
                     $("#notes").append("<p id='" + element._id + "'>");
-
-                    // Place the name of the note in the name input
                     $("#" + element._id).append(element.name);
                     $("#" + element._id).append("<br />");
-                    // Place the body of the note in the body textarea
                     $("#" + element._id).append(element.body);
                     $("#" + element._id).append("<br />");
                     $("#" + element._id).append("<button data-id='" + element._id + "' article-id='" + data._id + "'  class='dropnote'>Remove Note</button>");
-                    // // Place the name of the note in the name input
-                    // $("#notes").append(element.name);
-                    // $("#notes").append("<br />");
-                    // // Place the body of the note in the body textarea
-                    // $("#notes").append(element.body);
-                    // $("#notes").append("<br />");
-                    // $("#notes").append("<button data-id='" + element._id + "' class='dropnote'>Remove Note</button>");
-                    // $("#notes").append("</p>");
+
                 });
             }
         });
@@ -58,31 +48,19 @@ function showNotes(thisId) {
 $(document).on("click", "#savenote", function () {
     // Grab the id associated with the article from the submit button
     var thisId = $(this).attr("data-id");
+
     $.when(
         // Run a POST request to change the note, using what's entered in the inputs
         $.ajax({
             method: "POST",
             url: "/articles/" + thisId,
             data: {
-                // Value taken from name input
                 name: $("#nameinput").val(),
-                // Value taken from note textarea
                 body: $("#bodyinput").val()
             }
         })
-            // With that done
-            .then(function (data) {
-                // Empty the notes section
-
-            })
-
     ).then(showNotes(thisId));
 
-
-
-    // // Also, remove the values entered in the input and textarea for note entry
-    // $("#nameinput").val("");
-    // $("#bodyinput").val("");
 });
 
 

@@ -1,6 +1,6 @@
-// ************************************************************************
+// **************************************************************
 // App:  Peanut Gallery
-// ************************************************************************
+// **************************************************************
 
 // Dependencies
 // ================
@@ -35,7 +35,7 @@ app.set('view engine', '.hbs');
 
 // Start the server
 // ================
-app.listen(PORT, function(err) {
+app.listen(PORT, function (err) {
     if (!err)
         console.log("Listening on http://localhost:%s", PORT)
     else console.log(err)

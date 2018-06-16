@@ -4,22 +4,16 @@ module.exports = function (app) {
     const cheerio = require("cheerio");
     const db = require("../models");
 
-
     app.get('/', function (req, res) {
         //Refresh articles on load
         res.redirect('scrape');
     });
 
-
     app.get("/scrape", function (req, res) {
         console.log("scraping")
-        // First, we grab the body of the html with request
-        axios.get("https://www.washingtonpost.com/national/?nid=top_nav_national").then(function (response) {
-            // console.log(response);
-            // Then, we load that into cheerio and save it to $ for a shorthand selector
-            var $ = cheerio.load(response.data);
 
-            // Now, we grab every h2 within an article tag, and do the following:
+        axios.get("https://www.washingtonpost.com/national/?nid=top_nav_national").then(function (response) {
+            var $ = cheerio.load(response.data);
             $("div .story-body").each(function (i, element) {
 
                 var story = {};
@@ -37,26 +31,21 @@ module.exports = function (app) {
                     .children("a")
                     .attr("href");
 
-
                 story.summary = $(this)
                     .children("div .story-description")
                     .children("p")
                     .text();
 
-
                 // See if this story already exists...
                 db.Article.findOne({ title: story.title })
                     .then(function (dbArticle) {
-
+                        // If *not*...
                         if (dbArticle == null) {
-                            // Create a new Article using the `story` object built from scraping
+                            // ...create a new Article using the `story` object built from scraping
                             db.Article.create(story)
                                 .then(function (dbArticle) {
-                                    // View the added story in the console
-                                    // console.log(dbArticle);
                                 })
                                 .catch(function (err) {
-                                    // If an error occurred, send it to the client
                                     return res.json(err);
                                 });
                         }
@@ -64,7 +53,7 @@ module.exports = function (app) {
 
             });
 
-            // If we were able to successfully scrape and save an Article, send a message to the client
+            // If we were able to successfully scrape and save an Article, load them up.
             res.redirect('articles');
         });
     });
@@ -72,10 +61,10 @@ module.exports = function (app) {
     app.get('/articles', function (req, res) {
 
         const db = require("../models");
+        //get all articles in order added to db...
         db.Article.find()
             .sort({ seen: -1 })
-            // ..and populate all of the notes associated with it
-            .populate("note")
+            // .populate("note")
             .then(function (dbArticle) {
 
                 var hbsObject = {
@@ -86,8 +75,6 @@ module.exports = function (app) {
 
             })
             .catch(function (err) {
-                // If an error occurred, send it to the client
-                // res.json(err);
 
                 console.log(err);
             });
@@ -118,10 +105,6 @@ module.exports = function (app) {
 
         db.Note.create(req.body)
             .then(function (dbNote) {
-                // If a Note was created successfully, find one Article with an `_id` equal to `req.params.id`. Update the Article to be associated with the new Note
-                // { new: true } tells the query that we want it to return the updated User -- it returns the original by default
-                // Since our mongoose query returns a promise, we can chain another `.then` which receives the result of the query
-
                 return db.Article.findOneAndUpdate({ _id: req.params.id }, { $push: { note: dbNote._id } }, { upsert: true });
             })
             .then(function (dbArticle) {
